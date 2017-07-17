@@ -1,0 +1,128 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>simplePage</title>
+<style type="text/css">
+html,body{ margin:0 auto; text-align:center; }
+.main{ font:12px/24px "Microsoft YaHei"; height:1000px; }
+#page{ margin:100px auto; width:960px; text-align:center; }
+#page a{ text-decoration:none; display:inline-block; height:24px; padding:0 8px; border-radius:3px; background-color:#DEF39E; color:#8CAC2C; text-align:center; margin:0 2px; }
+#page a:hover,#page .now{ background-color:#8CAC2C; color:#fff; transition:all .5s ease 0s; }
+</style>
+</head>
+<body>
+<div class="main">
+  <div id="page">
+    
+    <!-- <a href="#3">上一页</a>
+    <a href="#4">4</a>
+    <a href="#5">5</a>
+    <a href="#6" class="now">6</a>
+    <a href="#7">7</a>
+    <a href="#8">8</a>
+    <a href="#9">下一页</a> -->
+    
+  </div>
+  <div class="back"></div>
+</div>
+<script src="http://www.jq22.com/jquery/jquery-1.7.1.js"></script>
+<script type="text/javascript">
+$(function(){
+  $.simplePage({
+    obj : "#page",
+    nowNum : 1,
+    allNum : 20,
+    callBack : function(now, all){
+      $(".back").html(now + "-" + all);
+    }
+  });
+});
+/*!
+ * jQuery simple page plus v1.0
+ * http://t.qq.com/websole 
+ * Author:sole
+ * Mail:macore@163.com
+ * Created:2012/10/31
+ * Copyright 2012 - http://t.qq.com/websole 
+*/
+$.extend({
+  //obj:分页对象; noeNum:当前页； allNum:总页数； callBack：回调函数
+  simplePage : function(opt){
+    if(!opt.obj){ return false; };
+    var obj = $(opt.obj); 
+    var nowNum = opt.nowNum || 1; 
+    var allNum = opt.allNum || 5; 
+    var callBack = opt.callBack || function(){};
+    var apd_ele = "";
+    function ele(num, cls){
+      var str = "";
+      if(cls){
+        str = "<a href='#"+num+"' class='"+cls+"'>"+num+"</a>";
+      }else{
+        str = "<a href='#"+num+"'>"+num+"</a>";
+      }
+      return str;
+    }
+    if(nowNum > 1){
+      apd_ele = "<a href='#"+ ( nowNum - 1 ) +"'>上一页</a>";
+      obj.append(apd_ele);
+    }
+    if(allNum <= 5){
+      for(var i=1; i<=allNum; i++){
+        if(nowNum == i){
+          apd_ele = ele(i, "now");
+        }else{
+          apd_ele = ele(i);
+        }
+        obj.append(apd_ele);
+      }
+    }else{
+      for(var i=1; i<=5; i++){
+        if(nowNum == 1 || nowNum == 2){
+          if(nowNum == i){
+            apd_ele = ele(i, "now");
+          }else{
+            apd_ele = ele(i);
+          }
+        }else if( (allNum - nowNum) == 0 || (allNum - nowNum) == 1 ){
+          if( (allNum - nowNum) == 0 && i == 5){
+            apd_ele = ele( (allNum - 5 + i), "now");
+          }else if( (allNum - nowNum) == 1 && i == 4){
+            apd_ele = ele( (allNum - 5 + i), "now");
+          }else{
+            apd_ele = ele( allNum - 5 + i );
+          }
+        }else{
+          if(i == 3){
+            apd_ele = ele(nowNum-3+i, "now");
+          }else{
+            apd_ele = ele(nowNum-3+i);
+          }
+        }
+        obj.append(apd_ele);
+      }
+    }
+    if((allNum - nowNum) >= 1){
+      apd_ele = "<a href='#"+ ( nowNum + 1 ) +"'>下一页</a>";
+      obj.append(apd_ele);
+    }
+    callBack(nowNum, allNum);
+    obj.find("a").click(function(){
+      var nowNum = parseInt($(this).attr("href").substring(1));
+      obj.html("");
+      $.simplePage({
+        obj : "#page",
+        nowNum : nowNum,
+        allNum : allNum,
+        callBack :callBack
+      });
+      return false;
+    });
+  }
+});
+</script>
+</body>
+</html>
+
